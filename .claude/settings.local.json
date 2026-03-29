@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npx create-vite@latest . --template react 2)",
+      "Bash(1:*)",
+      "Bash(npx:*)",
+      "Bash(cp /c/Users/sseif/Desktop/stock/testapp/package.json /c/Users/sseif/Desktop/stock/package.json)",
+      "Bash(cp /c/Users/sseif/Desktop/stock/testapp/vite.config.js /c/Users/sseif/Desktop/stock/vite.config.js)",
+      "Bash(cp /c/Users/sseif/Desktop/stock/testapp/index.html /c/Users/sseif/Desktop/stock/index.html)",
+      "Bash(cp /c/Users/sseif/Desktop/stock/testapp/eslint.config.js /c/Users/sseif/Desktop/stock/eslint.config.js)",
+      "Bash(cp -r /c/Users/sseif/Desktop/stock/testapp/public /c/Users/sseif/Desktop/stock/public)",
+      "Bash(npm install:*)",
+      "Bash(ls /c/Users/sseif/Desktop/stock/.env*)",
+      "Bash(/c/Users/sseif/Desktop/stock/.env.example:*)",
+      "Bash(npm run:*)",
+      "Bash(node:*)"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "cash": 500,
+  "startingCapital": 500,
+  "currency": "CAD",
+  "positions": {},
+  "totalValue": 500,
+  "trades": [],
+  "log": [],
+  "equityCurve": [{"time": "start", "value": 500}],
+  "lastUpdated": null,
+  "isBankrupt": false,
+  "dayStartValue": 500,
+  "dayStartDate": null
+}
