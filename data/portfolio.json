@@ -6,9 +6,14 @@
   "totalValue": 500,
   "trades": [],
   "log": [],
-  "equityCurve": [{"time": "start", "value": 500}],
-  "lastUpdated": null,
+  "equityCurve": [
+    {
+      "time": "start",
+      "value": 500
+    }
+  ],
+  "lastUpdated": "2026-03-30T23:36:41.322Z",
   "isBankrupt": false,
   "dayStartValue": 500,
-  "dayStartDate": null
+  "dayStartDate": "2026-03-30"
 }
