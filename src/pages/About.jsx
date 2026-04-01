@@ -182,7 +182,7 @@ Always respond with valid JSON in this exact format:
         <div className="bg-indigo-900/20 rounded-lg p-3 border border-indigo-700/40">
           <p className="text-indigo-300 text-xs font-mono">
             Repo: <a href="https://github.com/soroushseifpour/claude-trader" target="_blank" rel="noreferrer" className="underline hover:text-indigo-100">soroushseifpour/claude-trader</a>
-            {' · '}Portfolio: <a href="https://raw.githubusercontent.com/soroushseifpour/claude-trader/main/data/portfolio.json" target="_blank" rel="noreferrer" className="underline hover:text-indigo-100">data/portfolio.json</a>
+            {' · '}Portfolio: <a href="https://raw.githubusercontent.com/soroushseifpour/claude-trader/master/data/portfolio.json" target="_blank" rel="noreferrer" className="underline hover:text-indigo-100">data/portfolio.json</a>
           </p>
         </div>
       </div>

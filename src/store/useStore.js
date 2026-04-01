@@ -574,7 +574,7 @@ export const useStore = create((set, get) => ({
 
   // ── GitHub state fetch ────────────────────────────────────────────────────
   fetchGitHubState: async () => {
-    const base = 'https://raw.githubusercontent.com/soroushseifpour/claude-trader/main/data';
+    const base = 'https://raw.githubusercontent.com/soroushseifpour/claude-trader/master/data';
     const ts = Date.now();
     try {
       const [portfolioRes, reportsRes] = await Promise.all([
