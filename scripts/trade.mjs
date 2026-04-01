@@ -211,50 +211,47 @@ async function runTradingCycle(portfolio) {
   const prompt = buildPortfolioPrompt(portfolio);
   log('Calling Claude (claude-sonnet-4-6) with web_search tool...');
 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1024,
-    system: SYSTEM_PROMPT,
-    tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-    messages: [{ role: 'user', content: prompt }],
-  });
-
+  let messages = [{ role: 'user', content: prompt }];
   let fullText = '';
 
-  for (const block of response.content) {
-    if (block.type === 'text') {
-      fullText += block.text;
-    } else if (block.type === 'tool_use' && block.name === 'web_search') {
-      log(`Web search: "${block.input?.query || 'market data'}"`);
-    }
-  }
-
-  // Handle tool_use stop — feed results back and get final answer
-  if (response.stop_reason === 'tool_use') {
-    const toolUseBlocks = response.content.filter((b) => b.type === 'tool_use');
-    log(`Performed ${toolUseBlocks.length} web search(es), continuing...`);
-
-    const toolResults = toolUseBlocks.map((block) => ({
-      type: 'tool_result',
-      tool_use_id: block.id,
-      content: 'Search completed. Use the information to make your trading decision.',
-    }));
-
-    const continuation = await client.messages.create({
+  // Agentic loop: keep going until end_turn or no more tool calls
+  for (let turn = 0; turn < 10; turn++) {
+    const response = await client.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
+      max_tokens: 4096,
       system: SYSTEM_PROMPT,
       tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-      messages: [
-        { role: 'user', content: prompt },
-        { role: 'assistant', content: response.content },
-        { role: 'user', content: toolResults },
-      ],
+      messages,
     });
 
-    for (const block of continuation.content) {
-      if (block.type === 'text') fullText += block.text;
+    // Collect text and log tool uses
+    for (const block of response.content) {
+      if (block.type === 'text') {
+        fullText += block.text;
+      } else if (block.type === 'tool_use' && block.name === 'web_search') {
+        log(`Web search: "${block.input?.query || 'market data'}"`);
+      } else if (block.type === 'tool_result') {
+        log(`Search results received.`);
+      }
     }
+
+    if (response.stop_reason !== 'tool_use') break;
+
+    // Append assistant turn; acknowledge tool calls so the loop can continue
+    messages = [
+      ...messages,
+      { role: 'assistant', content: response.content },
+      {
+        role: 'user',
+        content: response.content
+          .filter((b) => b.type === 'tool_use')
+          .map((block) => ({
+            type: 'tool_result',
+            tool_use_id: block.id,
+            content: '',
+          })),
+      },
+    ];
   }
 
   if (!fullText) throw new Error('No text response from Claude');
