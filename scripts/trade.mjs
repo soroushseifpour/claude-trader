@@ -205,6 +205,24 @@ Make your decision now.`;
 
 // ── Claude trading cycle ──────────────────────────────────────────────────────
 
+async function callWithRetry(client, params, maxRetries = 4) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await client.messages.create(params);
+    } catch (err) {
+      const status = err?.status ?? err?.statusCode;
+      const isRetryable = status === 529 || status === 503 || status === 429;
+      if (isRetryable && attempt < maxRetries) {
+        const delay = Math.min(1000 * 2 ** attempt, 30000);
+        log(`API ${status} (attempt ${attempt + 1}/${maxRetries + 1}) — retrying in ${delay / 1000}s...`);
+        await new Promise((r) => setTimeout(r, delay));
+      } else {
+        throw err;
+      }
+    }
+  }
+}
+
 async function runTradingCycle(portfolio) {
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -216,7 +234,7 @@ async function runTradingCycle(portfolio) {
 
   // Agentic loop: keep going until end_turn or no more tool calls
   for (let turn = 0; turn < 10; turn++) {
-    const response = await client.messages.create({
+    const response = await callWithRetry(client, {
       model: 'claude-sonnet-4-6',
       max_tokens: 4096,
       system: SYSTEM_PROMPT,
